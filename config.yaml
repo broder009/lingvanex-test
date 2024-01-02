@@ -1,0 +1,33 @@
+steps:
+  - type: preprocess
+    parameters:
+      inputs: 
+      - WikiMatrix.en-ru.en
+      - WikiMatrix.en-ru.ru
+      outputs: &prepared
+      - en-prep.txt
+      - ru-prep.txt
+      preprocessors:
+        - WhitespaceNormalizer: {}
+        - RegExpSub:
+            patterns: 
+              - [ '»', '"', 0, '' ]
+              - [ '«', '"', 0, '']
+              - [ '“', '"', 0, '']
+              - [ '”', '"', 0, '']
+              - [ '“', '"', 0, '']
+              - [ '‟', '"', 0, '']
+              - [ '„', '"', 0, '']
+              - [ '`', "'", 0, '']
+              - [ ' , ', ', ', 0, '']
+              - [ ' ,', ',', 0, '']
+              - [ '\.', '.', 0, '']
+              - [ '\{\\.*\}', '', 0, '']
+              - [ ' / ', ' ', 0, '']
+              - [ ' \ ', ' ', 0, '']
+              - [ '|', ' ', 0, '']              
+              
+              
+              
+              
+      
