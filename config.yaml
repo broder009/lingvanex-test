@@ -1,32 +1,25 @@
+common:
+  output_directory: datasets/
+  default_n_jobs: 4
 steps:
   - type: preprocess
     parameters:
       inputs: 
       - WikiMatrix.en-ru.en
       - WikiMatrix.en-ru.ru
-      outputs: &prepared
-      - en-prep.txt
-      - ru-prep.txt
+      outputs: &preprocessed
+      - en_preprocessed.en
+      - ru_preprocessed.ru
       preprocessors:
         - WhitespaceNormalizer: {}
-        - RegExpSub:
-            patterns: 
-              - [ '»', '"', 0, '' ]
-              - [ '«', '"', 0, '']
-              - [ '“', '"', 0, '']
-              - [ '”', '"', 0, '']
-              - [ '“', '"', 0, '']
-              - [ '‟', '"', 0, '']
-              - [ '„', '"', 0, '']
-              - [ '`', "'", 0, '']
-              - [ ' , ', ', ', 0, '']
-              - [ ' ,', ',', 0, '']
-              - [ '\.', '.', 0, '']
-              - [ '\{\\.*\}', '', 0, '']
-              - [ ' / ', ' ', 0, '']
-              - [ ' \ ', ' ', 0, '']
-              - [ '|', ' ', 0, '']              
-              
+        - CustomPreprocessor: {}
+          module: custom_preprocessor
+  - type: remove_duplicates
+    parameters:
+      inputs: *preprocessed
+      outputs: &no_duplicates
+        - en_no_duplicates.en
+        - ru_no_duplicates.ru     
               
               
               

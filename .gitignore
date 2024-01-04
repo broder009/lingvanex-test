@@ -1,2 +1,5 @@
 __pycache__
 *.txt
+datasets 
+test_datasets
+.vscode
