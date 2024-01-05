@@ -1,1 +1,1 @@
-from preprocessors.custom_preprocessor import CharacterPreprocessor
+from preprocessors.preprocessor import CharacterPreprocessor

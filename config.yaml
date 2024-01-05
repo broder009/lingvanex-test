@@ -1,26 +1,49 @@
-common:
-  output_directory: datasets/
+common: 
+  output_directory: "datasets/"
   default_n_jobs: 4
-steps:
-  - type: preprocess
-    parameters:
-      inputs: 
-      - WikiMatrix.en-ru.en
-      - WikiMatrix.en-ru.ru
-      outputs: &preprocessed
-      - en_preprocessed.en
-      - ru_preprocessed.ru
-      preprocessors:
-        - WhitespaceNormalizer: {}
-        - CustomPreprocessor: {}
-          module: custom_preprocessor
-  - type: remove_duplicates
-    parameters:
-      inputs: *preprocessed
-      outputs: &no_duplicates
-        - en_no_duplicates.en
-        - ru_no_duplicates.ru     
-              
-              
-              
-      
+steps: 
+- type: "preprocess"
+  parameters: 
+    inputs: 
+      - "WikiMatrix.en-ru.en"
+      - "WikiMatrix.en-ru.ru"
+    outputs: 
+      - "en_preprocessed.en"
+      - "ru_preprocessed.ru"
+    preprocessors: 
+      - WhitespaceNormalizer: {}
+      - CharacterPreprocessor: {}
+        module: "preprocessors/"
+- type: "remove_duplicates"
+  parameters: 
+    inputs: 
+    - "en_preprocessed.en"
+    - "ru_preprocessed.ru"
+    outputs: 
+    - "en_no_duplicates.en"
+    - "ru_no_duplicates.ru"
+    compare: "all"
+- type: "filter"
+  parameters: 
+    inputs: 
+    - "en_no_duplicates.en"
+    - "ru_no_duplicates.ru"
+    outputs: 
+    - "en_filtered.en"
+    - "ru_filterd.ru"
+    filters: 
+      - LengthRatioFilter:
+          unit: "word"
+          threshold: 3
+      - LongWordFilter:
+          threshold: 25
+      - EngInBctFilter: 
+        module: "filters/"
+      - LanguageIDFilter: 
+          id_method: "cld2"
+          languages: 
+            - "en"
+            - "ru"
+          thresholds: 
+            - 0.5
+            - 0.5
